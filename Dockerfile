@@ -4,7 +4,6 @@ LABEL maintainer="Ming Chen & Franky Quintero"
 
 ENV ANDROID_HOME="/opt/android-sdk" \
     ANDROID_NDK="/opt/android-ndk" \
-    FLUTTER_HOME="/opt/flutter" \
     JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
 
 # Get the latest version from https://developer.android.com/studio/index.html
@@ -57,11 +56,8 @@ RUN apt-get update -qq > /dev/null && \
         m4 \
         ncurses-dev \
         ocaml \
-        openjdk-8-jdk \
         openssh-client \
         pkg-config \
-        software-properties-common \
-        ruby-full \
         software-properties-common \
         unzip \
         wget \
@@ -91,17 +87,8 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "platforms;android-28" \
         "platforms;android-27" \
-        "platforms;android-26" \
-        "platforms;android-25" \
         "platforms;android-24" \
-        "platforms;android-23" \
-        "platforms;android-22" \
-        "platforms;android-21" \
-        "platforms;android-20" \
-        "platforms;android-19" \
-        "platforms;android-18" \
-        "platforms;android-17" \
-        "platforms;android-16" > /dev/null && \
+        "platforms;android-17" > /dev/null && \
     echo "Installing platform tools " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "platform-tools" > /dev/null && \
@@ -110,18 +97,9 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
         "build-tools;28.0.3" "build-tools;28.0.2" \
         "build-tools;27.0.3" "build-tools;27.0.2" "build-tools;27.0.1" \
         "build-tools;26.0.2" "build-tools;26.0.1" "build-tools;26.0.0" \
-        "build-tools;25.0.3" "build-tools;25.0.2" \
-        "build-tools;25.0.1" "build-tools;25.0.0" \
-        "build-tools;24.0.3" "build-tools;24.0.2" \
         "build-tools;24.0.1" "build-tools;24.0.0" > /dev/null && \
     echo "Installing build tools " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "build-tools;23.0.3" "build-tools;23.0.2" "build-tools;23.0.1" \
-        "build-tools;22.0.1" \
-        "build-tools;21.1.2" \
-        "build-tools;20.0.0" \
-        "build-tools;19.1.0" \
-        "build-tools;18.1.1" \
         "build-tools;17.0.0" > /dev/null && \
     echo "Installing extras " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
@@ -132,25 +110,8 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
         "extras;google;google_play_services" \
         "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2" \
         "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.1" > /dev/null && \
-    echo "Installing Google APIs" && \
-    yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "add-ons;addon-google_apis-google-24" \
-        "add-ons;addon-google_apis-google-23" \
-        "add-ons;addon-google_apis-google-22" \
-        "add-ons;addon-google_apis-google-21" \
-        "add-ons;addon-google_apis-google-19" \
-        "add-ons;addon-google_apis-google-18" \
-        "add-ons;addon-google_apis-google-17" \
-        "add-ons;addon-google_apis-google-16" > /dev/null && \
-    echo "Installing emulator " && \
-    yes | "$ANDROID_HOME"/tools/bin/sdkmanager "emulator" > /dev/null && \
-    echo "Installing kotlin" && \
-    wget --quiet -O sdk.install.sh "https://get.sdkman.io" && \
-    bash -c "bash ./sdk.install.sh > /dev/null && source ~/.sdkman/bin/sdkman-init.sh && sdk install kotlin" && \
-    rm -f sdk.install.sh && \
 # Copy sdk license agreement files.
 RUN mkdir -p $ANDROID_HOME/licenses
 COPY sdk/licenses/* $ANDROID_HOME/licenses/
 
-# Create some jenkins required directory to allow this image run with Jenkins
 RUN chmod 777 $ANDROID_HOME/.android
