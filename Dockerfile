@@ -2,14 +2,11 @@ FROM jetbrains/teamcity-minimal-agent:latest
 
 LABEL maintainer="Ming Chen & Franky Quintero"
 
-ENV ANDROID_HOME="/opt/android-sdk" \
-    ANDROID_NDK="/opt/android-ndk"
+ENV ANDROID_HOME="/opt/android-sdk"
 
 # Get the latest version from https://developer.android.com/studio/index.html
 ENV ANDROID_SDK_TOOLS_VERSION="4333796"
 
-# Get the latest version from https://developer.android.com/ndk/downloads/index.html
-ENV ANDROID_NDK_VERSION="20"
 
 # Set locale
 ENV LANG="en_US.UTF-8" \
@@ -24,7 +21,6 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 
 # Variables must be references after they are created
 ENV ANDROID_SDK_HOME="$ANDROID_HOME"
-ENV ANDROID_NDK_HOME="$ANDROID_NDK/android-ndk-r$ANDROID_NDK_VERSION"
 
 ENV PATH="$PATH:$ANDROID_SDK_HOME/emulator:$ANDROID_SDK_HOME/tools/bin:$ANDROID_SDK_HOME/tools:$ANDROID_SDK_HOME/platform-tools:$ANDROID_NDK:$FLUTTER_HOME/bin:$FLUTTER_HOME/bin/cache/dart-sdk/bin"
 
