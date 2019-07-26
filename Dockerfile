@@ -63,7 +63,8 @@ RUN echo "Installing platform tools " && \
         "platform-tools"
 RUN echo "Installing build tools " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
-        "build-tools;29.0.1"
+        "build-tools;29.0.1" \
+        "build-tools;28.0.3"
 RUN echo "Installing extras " && \
     yes | "$ANDROID_HOME"/tools/bin/sdkmanager \
         "extras;android;m2repository" \
