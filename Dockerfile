@@ -1,6 +1,6 @@
-FROM ubuntu:18.04
+FROM jetbrains/teamcity-minimal-agent:latest
 
-MAINTAINER Ming Chen
+LABEL maintainer="Ming Chen & Franky Quintero"
 
 ENV ANDROID_HOME="/opt/android-sdk" \
     ANDROID_NDK="/opt/android-ndk" \
@@ -12,9 +12,6 @@ ENV ANDROID_SDK_TOOLS_VERSION="4333796"
 
 # Get the latest version from https://developer.android.com/ndk/downloads/index.html
 ENV ANDROID_NDK_VERSION="20"
-
-# nodejs version
-ENV NODE_VERSION="10.x"
 
 # Set locale
 ENV LANG="en_US.UTF-8" \
@@ -69,24 +66,7 @@ RUN apt-get update -qq > /dev/null && \
         unzip \
         wget \
         zip \
-        zlib1g-dev > /dev/null && \
-    echo "Installing nodejs, npm, cordova, ionic, react-native" && \
-    curl -sL -k https://deb.nodesource.com/setup_${NODE_VERSION} \
-        | bash - > /dev/null && \
-    apt-get install -qq nodejs > /dev/null && \
-    apt-get clean > /dev/null && \
-    rm -rf /var/lib/apt/lists/ && \
-    npm install --quiet -g npm > /dev/null && \
-    npm install --quiet -g \
-        bower cordova eslint gulp \
-        ionic jshint karma-cli mocha \
-        node-gyp npm-check-updates \
-        react-native-cli > /dev/null && \
-    npm cache clean --force > /dev/null && \
-    rm -rf /tmp/* /var/tmp/* && \
-    echo "Installing fastlane" && \
-    gem install fastlane --quiet --no-document > /dev/null
-
+        zlib1g-dev > /dev/null 
 # Install Android SDK
 RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
     wget --quiet --output-document=sdk-tools.zip \
@@ -168,21 +148,9 @@ RUN echo "Installing sdk tools ${ANDROID_SDK_TOOLS_VERSION}" && \
     wget --quiet -O sdk.install.sh "https://get.sdkman.io" && \
     bash -c "bash ./sdk.install.sh > /dev/null && source ~/.sdkman/bin/sdkman-init.sh && sdk install kotlin" && \
     rm -f sdk.install.sh && \
-    # Install Flutter sdk
-    cd /opt && \
-    wget --quiet https://storage.googleapis.com/flutter_infra/releases/stable/linux/flutter_linux_v1.5.4-hotfix.2-stable.tar.xz -O flutter.tar.xz && \
-    tar xf flutter.tar.xz && \
-    rm -f flutter.tar.xz && \
-    flutter config --no-analytics
-
-
 # Copy sdk license agreement files.
 RUN mkdir -p $ANDROID_HOME/licenses
 COPY sdk/licenses/* $ANDROID_HOME/licenses/
 
 # Create some jenkins required directory to allow this image run with Jenkins
-RUN mkdir -p /var/lib/jenkins/workspace
-RUN mkdir -p /home/jenkins
-RUN chmod 777 /home/jenkins
-RUN chmod 777 /var/lib/jenkins/workspace
 RUN chmod 777 $ANDROID_HOME/.android
